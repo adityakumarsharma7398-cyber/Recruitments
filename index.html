@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apex Club Events | College Club Event Management</title>
+  <meta name="description" content="Discover, explore, and register for exciting technical workshops, hackathons, seminars, and competitions organized by Apex Tech Club.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="brand">
+        <div class="brand-badge">⚡</div>
+        <div class="brand-text">
+          <span class="brand-title">Apex Tech Club</span>
+          <span class="brand-subtitle">Student Community & Events</span>
+        </div>
+      </a>
+
+      <button class="nav-toggle" id="mobileNavToggle" aria-label="Toggle Navigation Menu">
+        ☰
+      </button>
+
+      <nav>
+        <ul class="nav-menu" id="navMenu">
+          <li><a href="#home" class="nav-link active" data-section="home">Home</a></li>
+          <li><a href="#events" class="nav-link" data-section="events">Events</a></li>
+          <li><a href="#registrations" class="nav-link" data-section="registrations">My Registrations</a></li>
+          <li><a href="admin.html" class="nav-link admin-link">🔐 Admin Portal</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-content container">
+
+    <section id="home-section" class="content-section">
+      <div class="hero-section">
+        <span class="hero-tag">🚀 Official Campus Tech Club</span>
+        <h1 class="hero-title">Learn, Build & Collaborate with Apex Tech Club</h1>
+        <p class="hero-description">
+          Welcome to the official technical club portal. We conduct hands-on workshops, hackathons, coding contests, and speaker sessions designed to help college students build practical skills and connect with like-minded peers.
+        </p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" id="btnExploreHero">Explore All Events</button>
+          <a href="#about" class="btn btn-secondary" onclick="alert('Apex Tech Club is run by students for students. Join us every weekend for fun technical workshops!'); return false;">About Our Club</a>
+        </div>
+      </div>
+
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <h2 class="section-title">⭐ Featured Spotlight Event</h2>
+          <p class="section-subtitle">Don't miss our major flagship workshop of the semester</p>
+        </div>
+      </div>
+      <div id="featuredEventContainer"></div>
+
+      <div class="section-header" style="margin-top: 40px;">
+        <div class="section-title-wrap">
+          <h2 class="section-title">Upcoming Club Activities</h2>
+          <p class="section-subtitle">Register early to reserve your seat in the upcoming sessions</p>
+        </div>
+        <button class="btn btn-secondary btn-sm" id="btnViewAllUpcoming">View All Events &rarr;</button>
+      </div>
+
+      <div class="events-grid" id="upcomingEventsGrid"></div>
+    </section>
+
+    <section id="events-section" class="content-section" style="display: none;">
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <h1 class="section-title">Explore Events</h1>
+          <p class="section-subtitle">Discover workshops, competitions, hackathons and other club activities.</p>
+        </div>
+      </div>
+
+      <div class="filter-bar">
+        <div class="search-input-wrapper">
+          <span class="search-icon">🔍</span>
+          <input
+            type="text"
+            id="searchEventsInput"
+            class="search-input"
+            placeholder="Search events by name, venue or keyword..."
+            autocomplete="off"
+          >
+        </div>
+
+        <div class="category-pills" id="categoryPills">
+          <button class="category-pill active" data-category="All">All</button>
+          <button class="category-pill" data-category="Workshop">Workshop</button>
+          <button class="category-pill" data-category="Hackathon">Hackathon</button>
+          <button class="category-pill" data-category="Competition">Competition</button>
+          <button class="category-pill" data-category="Seminar">Seminar</button>
+          <button class="category-pill" data-category="Other">Other</button>
+        </div>
+      </div>
+
+      <div class="events-grid" id="exploreEventsGrid"></div>
+
+      <div class="empty-state" id="noEventsState" style="display: none;">
+        <div class="empty-icon">📂</div>
+        <h3 class="empty-title">No events found</h3>
+        <p class="empty-text">We couldn't find any events matching your search or category filter. Try changing your search query.</p>
+      </div>
+    </section>
+
+    <section id="registrations-section" class="content-section" style="display: none;">
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <h1 class="section-title">My Registrations</h1>
+          <p class="section-subtitle">Check the events you have registered for and verify your confirmation.</p>
+        </div>
+      </div>
+
+      <div class="lookup-box">
+        <p style="font-size: 14px; font-weight: bold; color: #1e293b;" id="activeEmailLabel">
+          Enter your student email to look up your registered events:
+        </p>
+        <form class="lookup-form" id="lookupForm">
+          <input
+            type="email"
+            id="userEmailInput"
+            class="form-control lookup-input"
+            placeholder="e.g. student@college.edu"
+            required
+          >
+          <button type="submit" class="btn btn-primary" id="lookupRegistrationsBtn">
+            Find My Registrations
+          </button>
+        </form>
+      </div>
+
+      <div id="myRegistrationsList"></div>
+
+      <div class="empty-state" id="emptyRegistrationsState" style="display: none;">
+        <div class="empty-icon">🎟️</div>
+        <h3 class="empty-title">You haven't registered for any events yet</h3>
+        <p class="empty-text">Explore our upcoming workshops, hackathons, and seminars, and register to claim your spot!</p>
+        <button class="btn btn-primary btn-sm" onclick="switchSection('events')">
+          Browse Events
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="modal-backdrop" id="registrationModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTitle">Register for Event</h3>
+        <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close dialog">&times;</button>
+      </div>
+
+      <div class="modal-event-highlight">
+        <span style="font-size: 12px; text-transform: uppercase; display: block;">Selected Event</span>
+        <div id="modalEventName" style="font-size: 16px; font-weight: bold; margin-top: 4px;">Event Name</div>
+        <div id="modalEventMeta" style="font-size: 13px; margin-top: 4px;">📅 Date | 📍 Venue</div>
+      </div>
+
+      <div id="regAlert" class="alert" style="display: none;"></div>
+
+      <form id="registrationForm" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="regFullName">Full Name <span class="required">*</span></label>
+          <input
+            type="text"
+            id="regFullName"
+            class="form-control"
+            placeholder="e.g. Rahul Sharma"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="regEmail">College Email <span class="required">*</span></label>
+          <input
+            type="email"
+            id="regEmail"
+            class="form-control"
+            placeholder="e.g. rahul.sharma@college.edu"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="regCollegeYear">College / Year <span class="required">*</span></label>
+          <input
+            type="text"
+            id="regCollegeYear"
+            class="form-control"
+            placeholder="e.g. ABES Engineering College - 3rd Year CSE"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="regPhone">Phone Number <span class="required">*</span></label>
+          <input
+            type="tel"
+            id="regPhone"
+            class="form-control"
+            placeholder="e.g. 9876543210"
+            required
+          >
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="modalCancelBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="modalSubmitBtn">Submit Registration</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container footer-content">
+      <div>
+        <strong>Apex Tech Club</strong> &copy; 2026. Made with HTML, CSS & Vanilla JS.
+      </div>
+      <div>
+        <a href="admin.html" style="font-weight: bold;">Admin Panel Login</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

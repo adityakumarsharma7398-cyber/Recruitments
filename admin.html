@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | Apex Club Event Management</title>
+  <meta name="description" content="Admin management console for Apex Tech Club events, workshops, hackathons, and student registrations.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body style="background-color: #f1f5f9;">
+
+  <div class="login-wrapper" id="loginScreen">
+    <div class="login-card">
+      <div class="login-header">
+        <div class="brand-badge" style="margin: 0 auto 10px auto;">⚡</div>
+        <h1 class="login-title">Club Admin Portal</h1>
+        <p class="login-subtitle">Sign in to manage club events and registrations</p>
+      </div>
+
+      <div class="login-hint">
+        <strong>Demo Login Credentials:</strong><br>
+        Email: <code>admin@club.com</code><br>
+        Password: <code>admin123</code>
+      </div>
+
+      <div id="loginAlert" class="alert alert-danger" style="display: none;"></div>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label class="form-label" for="loginEmail">Admin Email</label>
+          <input
+            type="email"
+            id="loginEmail"
+            class="form-control"
+            value="admin@club.com"
+            placeholder="admin@club.com"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="loginPassword">Password</label>
+          <input
+            type="password"
+            id="loginPassword"
+            class="form-control"
+            value="admin123"
+            placeholder="admin123"
+            required
+          >
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block" style="margin-top: 10px;">
+          Sign In to Dashboard
+        </button>
+      </form>
+
+      <div style="text-align: center; font-size: 13px; margin-top: 10px;">
+        <a href="index.html">&larr; Return to Public Event Portal</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-body" id="adminDashboard" style="display: none;">
+
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="admin-sidebar-header">
+        <div class="brand-badge">⚡</div>
+        <div>
+          <div class="admin-sidebar-title">Apex Admin</div>
+          <div class="admin-sidebar-sub">Event Management</div>
+        </div>
+      </div>
+
+      <nav class="admin-nav">
+        <a href="#dashboard" class="admin-nav-item active" data-tab="dashboard">
+          <span>📊</span> Dashboard
+        </a>
+        <a href="#events" class="admin-nav-item" data-tab="events">
+          <span>📅</span> Manage Events
+        </a>
+        <a href="#registrations" class="admin-nav-item" data-tab="registrations">
+          <span>📝</span> Registrations
+        </a>
+      </nav>
+
+      <div class="admin-sidebar-footer">
+        <a href="index.html" class="btn btn-secondary btn-sm btn-block" style="background-color: #1e293b; color: #cbd5e1; border-color: #334155;">
+          🌐 View Student Site
+        </a>
+        <button class="btn btn-danger btn-sm btn-block" id="logoutBtn">
+          🚪 Logout
+        </button>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+
+      <div class="admin-topbar">
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <button class="admin-mobile-toggle" id="adminMobileToggle" aria-label="Toggle Sidebar Menu">
+            ☰
+          </button>
+          <h1 class="admin-topbar-title" id="adminPageTitle">Dashboard Overview</h1>
+        </div>
+        <div style="font-size: 14px; color: #64748b; font-weight: bold;">
+          Logged in as: <strong style="color: #0f172a;">admin@club.com</strong>
+        </div>
+      </div>
+
+      <div id="tab-dashboard" class="admin-tab-section">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-blue">📅</div>
+            <div class="stat-info">
+              <span class="stat-value" id="statTotalEvents">0</span>
+              <span class="stat-label">Total Events</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-green">⏳</div>
+            <div class="stat-info">
+              <span class="stat-value" id="statUpcomingEvents">0</span>
+              <span class="stat-label">Upcoming Events</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-amber">👥</div>
+            <div class="stat-info">
+              <span class="stat-value" id="statTotalRegistrations">0</span>
+              <span class="stat-label">Total Registrations</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-card" style="margin-top: 25px;">
+          <div class="table-header-bar">
+            <h3 style="font-size: 18px;">Recent Events</h3>
+            <button class="btn btn-secondary btn-sm" onclick="switchAdminTab('events')">
+              View All Events &rarr;
+            </button>
+          </div>
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Event Name</th>
+                  <th>Category</th>
+                  <th>Date</th>
+                  <th>Venue</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="recentEventsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div id="tab-events" class="admin-tab-section" style="display: none;">
+        <div class="table-card">
+          <div class="table-header-bar">
+            <div>
+              <h3 style="font-size: 18px;">Club Events</h3>
+              <p style="font-size: 13px; color: #64748b;">Create, edit, or remove technical workshops, hackathons, and seminars</p>
+            </div>
+            <button class="btn btn-primary" id="btnOpenAddEvent">
+              + Add Event
+            </button>
+          </div>
+
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Event Name</th>
+                  <th>Category</th>
+                  <th>Date</th>
+                  <th>Time</th>
+                  <th>Venue</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="eventsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div id="tab-registrations" class="admin-tab-section" style="display: none;">
+        <div class="table-card">
+          <div class="table-header-bar">
+            <div>
+              <h3 style="font-size: 18px;">Student Registrations</h3>
+              <p style="font-size: 13px; color: #64748b;">View and filter registered students across all club events</p>
+            </div>
+          </div>
+
+          <div style="padding: 15px 20px; background-color: #fafafa; border-bottom: 1px solid #e2e8f0; display: flex; gap: 15px; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 240px;">
+              <input
+                type="text"
+                id="searchRegInput"
+                class="form-control"
+                placeholder="Search by student name, email, college or event..."
+              >
+            </div>
+            <div style="width: 220px;">
+              <select id="filterRegEventSelect" class="form-control">
+                <option value="All">All Events</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Student Name</th>
+                  <th>Email</th>
+                  <th>College / Year</th>
+                  <th>Phone</th>
+                  <th>Registered Event</th>
+                  <th>Registration Date</th>
+                </tr>
+              </thead>
+              <tbody id="registrationsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="eventModal" role="dialog" aria-modal="true" aria-labelledby="eventModalTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="eventModalTitle">Add New Event</h3>
+        <button class="modal-close-btn" id="eventModalClose" aria-label="Close dialog">&times;</button>
+      </div>
+
+      <div id="eventFormAlert" class="alert" style="display: none;"></div>
+
+      <form id="eventForm" novalidate>
+        <input type="hidden" id="eventId">
+
+        <div class="form-group">
+          <label class="form-label" for="eventName">Event Name <span class="required">*</span></label>
+          <input
+            type="text"
+            id="eventName"
+            class="form-control"
+            placeholder="e.g. Web Development Workshop"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="eventCategory">Category <span class="required">*</span></label>
+          <select id="eventCategory" class="form-control" required>
+            <option value="Workshop">Workshop</option>
+            <option value="Hackathon">Hackathon</option>
+            <option value="Competition">Competition</option>
+            <option value="Seminar">Seminar</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="form-group">
+            <label class="form-label" for="eventDate">Date <span class="required">*</span></label>
+            <input
+              type="text"
+              id="eventDate"
+              class="form-control"
+              placeholder="e.g. 12 October 2026"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="eventTime">Time <span class="required">*</span></label>
+            <input
+              type="text"
+              id="eventTime"
+              class="form-control"
+              placeholder="e.g. 10:00 AM"
+              required
+            >
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="eventVenue">Venue <span class="required">*</span></label>
+          <input
+            type="text"
+            id="eventVenue"
+            class="form-control"
+            placeholder="e.g. ABES Engineering College"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="eventDescription">Description <span class="required">*</span></label>
+          <textarea
+            id="eventDescription"
+            class="form-control"
+            rows="3"
+            placeholder="Provide a clear description of the event."
+            required
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="eventImage">Event Image URL (Optional)</label>
+          <input
+            type="text"
+            id="eventImage"
+            class="form-control"
+            placeholder="https://example.com/event-banner.jpg"
+          >
+        </div>
+
+        <div class="form-group" style="flex-direction: row; align-items: center; gap: 8px;">
+          <input type="checkbox" id="eventFeatured" style="width: 18px; height: 18px; cursor: pointer;">
+          <label for="eventFeatured" style="cursor: pointer; font-size: 14px; font-weight: bold;">
+            Mark as Featured Event (Spotlight on Home Page)
+          </label>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="eventModalCancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="eventModalSave">Save Event</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/admin.js"></script>
+</body>
+</html>
